@@ -1,0 +1,18 @@
+###### Requirements for code management and styling ######
+black
+pylint
+pre-commit
+
+###### General Requirements ######
+numpy
+torch
+transformers
+sentence_transformers
+nltk
+elasticsearch
+xmltodict
+jsonlines
+BeautifulSoup4
+unitxt
+Jupyter
+setuptools
