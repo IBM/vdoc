@@ -42,14 +42,20 @@ An example usage is under create_virtual_document.main()
 
 ## Run the EMNLP-paper Direct Vdoc Evaluation (*)
 
-Try the [notebook](vdoc_on_scrolls.ipynb) to run a direct vdoc evaluation on qasper, using
+### datasets ###
+1. download the qasper and narrativeqa datasets from [scroll](https://www.scrolls-benchmark.com/tasks) 
+
+2. download the [googlenq](https://ai.google.com/research/NaturalQuestions/download) train dataset.
+in the paper we used nq-train-02.jsonl.gz
+
+### run the direct vdoc evaluation ###
+
+We provide a [notebook](vdoc_on_scrolls.ipynb) and a [script](./scripts/run_all_direct_vdoc.sh)
+
+The [notebook](vdoc_on_scrolls.ipynb) can be used to run a direct vdoc evaluation on qasper, using
 window size of 2048 tokens. 
 
-The script
-```
-./scripts/run_all_direct_vdoc.sh
-```
-iterates over various window sizes and various rankers. Change the HOME variable to point to your downloaded files 
+The [script](./scripts/run_all_direct_vdoc.sh) iterates over various window sizes and various rankers. Change the HOME variable to point to your downloaded files 
 
 Alternatively, you can run directly 
 ```bash
