@@ -82,14 +82,8 @@ If you find this code useful, please cite
 ```
 @inproceedings{mass-etal-2024-bang,
     title = "More Bang for your Context: Virtual Documents for Question Answering over Long Documents",
-    author = "Mass, Yosi  and
-      Carmeli, Boaz  and
-      Yehudai, Asaf  and
-      Toledo, Assaf  and
-      Mills, Nathaniel",
-    editor = "Al-Onaizan, Yaser  and
-      Bansal, Mohit  and
-      Chen, Yun-Nung",
+    author = "Mass, Yosi and Carmeli, Boaz and Yehudai, Asaf and Toledo, Assaf  and Mills, Nathaniel",
+    editor = "Al-Onaizan, Yaser and Bansal, Mohit  and Chen, Yun-Nung",
     booktitle = "Findings of the Association for Computational Linguistics: EMNLP 2024",
     month = nov,
     year = "2024",
@@ -97,6 +91,5 @@ If you find this code useful, please cite
     publisher = "Association for Computational Linguistics",
     url = "https://aclanthology.org/2024.findings-emnlp.757",
     pages = "12936--12942",
-    abstract = "We deal with the problem of Question Answering (QA) over a long document, which poses a challenge for modern Large Language Models (LLMs). Although LLMs can handle increasingly longer context windows, they struggle to effectively utilize the long content. To address this issue, we introduce the concept of a virtual document (VDoc). A VDoc is created by selecting chunks from the original document that are most likely to contain the information needed to answer the user{'}s question, while ensuring they fit within the LLM{'}s context window. We hypothesize that providing a short and focused VDoc to the LLM is more effective than filling the entire context window with less relevant information. Our experiments confirm this hypothesis and demonstrate that using VDocs improves results on the QA task.",
 }
 ```
