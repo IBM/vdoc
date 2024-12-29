@@ -12,6 +12,9 @@ from rankers.tokenizer_utils import TokenizerUtils
 PASSAGE_LEN=512 #todo: pass this from outside
 VDOC_MODE=True
 
+import logging
+logger = logging.getLogger(__name__)
+
 class googlenq_reader():
 
     def __init__(self, input_file, document_mode=False):
@@ -21,10 +24,11 @@ class googlenq_reader():
         self.tokenizer_utils = TokenizerUtils()
 
     def read(self):
+        logger.info('reading documents' if self.document_mode else 'reading passages')
         cache_file = os.path.join('resources',self.dataset_name, 'docs_cache') if self.document_mode else os.path.join('resources',self.dataset_name,'passages_cache')
         try:
             data = pickle.load(open(cache_file, mode="rb"))
-            print("data loaded from cache")
+            logger.info("data loaded from cache")
         except:
             data = list(self._read())
             os.makedirs(os.path.dirname(cache_file), exist_ok=True)
@@ -38,6 +42,7 @@ class googlenq_reader():
 
 #       input_paths = glob.glob(self.dataset_dir)
         qrels = benchmark.get_qrels()
+        logger.info('reading documents' if self.document_mode else 'reading passages')
 
         with open(self.input_file, 'rb') as f:
             count = 0
@@ -45,8 +50,12 @@ class googlenq_reader():
                 for line in inf:
                     # each line contains a query
                     count += 1
-                    if count % 100 == 0:
-                        print ('read_paragraphs ' + str(count))
+                    if count < 1000:
+                        if count % 100 == 0:
+                            logger.info('reading ' + ('documents ' if self.document_mode else 'passages ') + str(count))
+                    else:
+                        if count % 1000 == 0:
+                            logger.info('reading ' + ('documents ' if self.document_mode else 'passages ') + str(count))
                     obj = json.loads(line.decode("utf-8"))
                     # if no exception is thrown, obj contains a record for a technote
                     try:
@@ -58,7 +67,7 @@ class googlenq_reader():
                             text = ' '.join([token['token'] for token in tokens])
 
                             # convert to txt
-                            soup = BeautifulSoup(text)
+                            soup = BeautifulSoup(text, features="html.parser")
                             text = soup.get_text()
                             if self.document_mode:
                                 yield record(doc_id, title=title, text=text, url=doc_id,

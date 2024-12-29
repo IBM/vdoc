@@ -50,12 +50,12 @@ in the paper we used nq-train-02.jsonl.gz
 
 ### run the direct vdoc evaluation ###
 
-We provide a [notebook](vdoc_on_scrolls.ipynb) and a [script](./scripts/run_all_direct_vdoc.sh)
+We provide two notebooks:  [scrolls notebook](vdoc_on_scrolls.ipynb) and [googlenq notebook](vdoc_on_nq.ipynb), and a [script](./scripts/run_all_direct_vdoc.sh)
 
-The [notebook](vdoc_on_scrolls.ipynb) can be used to run a direct vdoc evaluation on qasper, using
+The ```notebooks``` can be used to run a direct vdoc evaluation on qasper or on googlenq, using
 window size of 2048 tokens. 
 
-The [script](./scripts/run_all_direct_vdoc.sh) iterates over various window sizes and various rankers. Change the HOME variable to point to your downloaded files 
+The ```script``` iterates over various window sizes and various rankers. Change the HOME variable to point to your downloaded files 
 
 Alternatively, you can run directly 
 ```bash

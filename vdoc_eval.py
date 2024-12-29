@@ -15,6 +15,14 @@ from vdoc_datasets.googlenq.reader import googlenq_reader
 from vdoc_datasets.scrolls.benchmark import scrolls_benchmark
 from vdoc_datasets.scrolls.reader import scrolls_reader
 
+import logging
+logging.basicConfig(
+        level=logging.INFO,  # Set the logging level
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",  # Define the log format
+    )
+logging.getLogger('sentence_transformers.SentenceTransformer').setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
+
 
 # direct vdoc evaluation. Check if gold passage is in vdoc
 def direct_vdoc_evaluation(records, queries, qrels, responses,
@@ -60,10 +68,10 @@ def direct_vdoc_evaluation(records, queries, qrels, responses,
             count += 1
             if count < 1000:
                 if count % 100 == 0:
-                    print('Count ' + str(count))
+                    logger.info('Processing ' + str(count))
             else:
                 if count % 1000 == 0:
-                    print('Count ' + str(count))
+                    logger.info('Processing ' + str(count))
 
             if queries_limit > 0 and count >= queries_limit:
                 break
@@ -88,7 +96,7 @@ def direct_vdoc_evaluation(records, queries, qrels, responses,
             if gold_passage:
                 # sanity check that the full document contains the gold passage
                 if included_overlap(gold_passage, document1, full_inclusion=True) < 1.0:
-                    print(f'query {query_id} does not have gold passage in original document. Skipping')
+                    logger.warning(f'query {query_id} does not have gold passage in original document. Skipping')
                     count_bad_document += 1
                     continue
 
@@ -170,9 +178,16 @@ def get_ranker(model_or_model_name_or_path):
         else SBertRanker(model_or_model_name_or_path)
 
 
-def vdoc(dataset, input_file, output_file, model_name, 
-         model_token_limit, max_new_tokens, passage_len,
-         order):
+def vdoc(dataset,
+         input_file,
+         output_file,
+         model_name,
+         model_token_limit,
+         max_new_tokens,
+         passage_len,
+         order,
+         queries_limit):
+
     # create dir of output file
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
@@ -206,7 +221,8 @@ def vdoc(dataset, input_file, output_file, model_name,
                            max_new_tokens=max_new_tokens,
                            model_token_limit=model_token_limit,
                            passage_token_limit=passage_len,
-                           order=order)
+                           order=order,
+                           queries_limit=queries_limit)
 
 
 def main():
@@ -227,6 +243,8 @@ def main():
                         default=512, type=int)
     parser.add_argument("--order", help="order of passages in vdoc (doc/rank). Default is doc",
                         type=str)
+    parser.add_argument("--queries_limit", help="Number of queries to process. Default is -1 (all queries)",
+                        default=-1, type=int)
     args = parser.parse_args()
 
     vdoc(dataset=args.dataset,
@@ -236,7 +254,8 @@ def main():
          model_token_limit=args.model_token_limit,
          max_new_tokens=args.max_new_tokens,
          passage_len=args.passage_len,
-         order=args.order)
+         order=args.order,
+         queries_limit=args.queries_limit)
 
 
 if __name__ == "__main__":
