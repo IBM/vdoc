@@ -4,6 +4,9 @@ import json
 from gzip import GzipFile
 from utils import remove_non_alphabetic, create_unique_pid, create_unique_url
 
+import logging
+logger = logging.getLogger(__name__)
+
 class googlenq_benchmark():
 
     def __init__(self, input_file, document_mode=False):
@@ -16,6 +19,7 @@ class googlenq_benchmark():
     # we run on the train files because we use googlenq to fine-tune models
 
     def get_queries(self):
+        logger.info('get queries')
         queries,_,_ = self.get_benchmark()
         return queries
 
@@ -24,11 +28,13 @@ class googlenq_benchmark():
     # we run on the train files because we use googlenq to fine-tune models
 
     def get_qrels(self):
+        logger.info('get qrels ' + ('(document_mode)' if self.document_mode else '(passage_mode)'))
         _,qrels,_ = self.get_benchmark()
         return qrels
 
     # for each record, get the short answer
     def get_target_responses(self):
+        logger.info('get short answers')
         _, _, responses = self.get_benchmark()
         return responses
 
@@ -37,7 +43,7 @@ class googlenq_benchmark():
         cache_file = os.path.join('resources', self.dataset_name, 'benchmark_cache') if self.document_mode else os.path.join('resources', self.dataset_name, 'passages_benchmark_cache')
         try:
             benchmark = pickle.load(open(cache_file, mode="rb"))
-            print("benchmark loaded from cache")
+            logger.info("benchmark loaded from cache")
         except:
             benchmark = self._get_benchmark()
             os.makedirs(os.path.dirname(cache_file), exist_ok=True)
@@ -57,8 +63,12 @@ class googlenq_benchmark():
                 for line in inf:
                     # each line contains a query
                     count += 1
-                    if count % 100 == 0:
-                        print ('read_records ' + str(count))
+                    if count < 1000:
+                        if count % 100 == 0:
+                            logger.info('reading benchmark ' + str(count))
+                    else:
+                        if count % 1000 == 0:
+                            logger.info('reading benchmark ' + str(count))
                     obj = json.loads(line.decode("utf-8"))
                     # if no exception is thrown, obj contains a record for a technote
                     try:
